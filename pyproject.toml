@@ -1,0 +1,121 @@
+[project]
+name = "allegroAPI"
+dynamic = ["version"]
+
+description = "Smartlight web API"
+requires-python = ">=3.11"
+authors = [{ name = "iPronics", email = "support@ipronics.com" }]
+dependencies = []
+
+
+[project.optional-dependencies]
+dev = ['ruff==0.3.0', 'pytest==8.0.0', 'pytest-cov==4.1.0']
+
+
+[build-system]
+build-backend = 'setuptools.build_meta'
+requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
+
+[tool.setuptools.packages.find]
+where = ["src/"]
+
+[tool.setuptools.package-data]
+allegroAPI = []
+
+[tool.coverage.report]
+skip_empty = true
+skip_covered = true
+show_missing = true
+exclude_also = ["if __name__ == .__main__.:"]
+[tool.pytest.ini_options]
+addopts = '--doctest-modules'
+
+[tool.ruff]
+
+[tool.ruff.lint]
+# Enable most ruff rules
+select = [
+    "F",   # Pyflakes
+    "W",   # pycodestyle
+    "E",   # pycodestyle
+    "C90", # mccabe
+    "I",   # isort
+    "N",   # pep8-naming
+    "D",   # pydocstyle
+    #"UP",  # pyupgrade
+    #"YTT",  # flake8-2020
+    "ANN",   # flake8-annotations
+    "ASYNC", # flake8-async
+    #"TRIO",  # flake8-trio
+    "S",   # flake8-bandit
+    "BLE", # flake8-blind-except
+    "FBT", # flake8-boolean-trap
+    "B",   # flake8-bugbear
+    "A",   # flake8-builtins
+    #"COM",  # flake8-commas
+    #"CPY",  # flake8-copyright
+    "C4",  # flake8-comprehensions
+    "DTZ", # flake8-datetimez
+    "T10", # flake8-debugger
+    #"DJ",  # flake8-django
+    "EM",  # flake8-errmsg
+    "EXE", # flake8-executable
+    "FA",  # flake8-future-annotations
+    #"ISC",  # flake8-implicit-str-concat
+    "ICN", # flake8-import-conventions
+    "G",   # flake8-logging-format
+    "INP", # flake8-no-pep420
+    "PIE", # flake8-pie
+    "T20", # flake8-print
+    #"PYI",  # flake8-pyi
+    "PT",  # flake8-pytest-style
+    "Q",   # flake8-quotes
+    "RSE", # flake8-raise
+    "RET", # flake8-return
+    "SLF", # flake8-self
+    #"SLOT",  # flake8-slots
+    "SIM", # flake8-simplify
+    "TID", # flake8-tidy-imports
+    "TCH", # flake8-type-checking
+    "INT", # flake8-gettext
+    "ARG", # flake8-unused-arguments
+    "PTH", # flake8-use-pathlib
+    "TD",  # flake8-todos
+    #"FIX",  # flake8-fixme
+    "ERA", # eradicate
+    #"PD",  # pandas-vet
+    "PGH",  # pygrep-hooks
+    "PL",   # Pylint
+    "TRY",  # tryceratops
+    "FLY",  # flynt
+    "NPY",  # NumPy-specific rules
+    "AIR",  # Airflow
+    "PERF", # Perflint
+    #"FURB",  # refurb
+    #"LOG",  # flake8-logging
+    "RUF", # Ruff-specific rules
+]
+
+
+ignore-init-module-imports = true
+
+# ignore some rules in general
+ignore = [
+    "ANN101", # missing annotation for self
+    "ANN204", # missing return type in init
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Some rules for specific types of files
+"tests/test_*" = ["D", "ANN", "S", 'PLR2004', 'ARG001']
+
+# INP001 excluded because of https://github.com/astral-sh/ruff/issues/6474
+"tests/*" = ["INP001"]
+
+[tool.ruff.lint.pycodestyle]
+# Enforce max line length of 100 when linting (but still aim at the default 88 when formatting)
+max-line-length = 100
+
+[tool.ruff.lint.pydocstyle]
+# use Google convention for docstrings
+convention = "google"
