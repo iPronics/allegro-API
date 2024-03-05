@@ -20,7 +20,7 @@ class AllegroExceptionError(Exception):
 
 NUM_CHANNELS = 35
 NUM_PUCS = 71
-NUM_PORTS = 31
+NUM_PORTS = 60
 CONN_MSG = "Hardware subsystem are not conencted."
 
 
@@ -37,19 +37,16 @@ class Smartlight:
         return d
 
     def __validate_pucstate(self, pucstate) -> None:  # noqa: ANN001
-        if not isinstance(pucstate, PUCState):
-            msg = "Wrong puc state definition"
-            raise AllegroExceptionError(msg)
         if not isinstance(pucstate.k, float):
             msg = "Coupling factor format not valid"
             raise AllegroExceptionError(msg)
         if not isinstance(pucstate.phase, float):
             msg = "Phase format not valid"
             raise AllegroExceptionError(msg)
-        if pucstate.k not in range(1):
+        if not (0 <= pucstate.k <= 1):
             msg = "Coupling factor out of range"
             raise AllegroExceptionError(msg)
-        if pucstate.k not in range(2 * pi):
+        if not (0 <= pucstate.phase <= (2 * pi)):
             msg = "Phase out of range"
             raise AllegroExceptionError(msg)
 
@@ -57,7 +54,7 @@ class Smartlight:
         if not isinstance(port, int):
             msg = "Wrong port format."
             raise AllegroExceptionError(msg)
-        if port not in range(0, NUM_PORTS):
+        if port not in range(NUM_PORTS):
             msg = "Port out of range."
             raise AllegroExceptionError(msg)
 
@@ -179,7 +176,7 @@ class Smartlight:
         return self.__give_pucs()
 
     # TODO(Lluis): central_wavelength,bandwidth and gd_slope values to be defined
-    def compensate_dispersion(  # noqa: PLR0913
+    def compensate_dispersion(  # noqa: PLR0913  # pragma: no cover
         self,
         inport: int,
         outport: int,
@@ -206,14 +203,15 @@ class Smartlight:
             raise AllegroExceptionError(CONN_MSG)
 
         self.__validate_port(inport)
-        if any(i not in range(NUM_CHANNELS) for i in channels):
+        if channels == None:
+            channels = list(range(NUM_CHANNELS - 1))
+        if inport in channels:
+            channels.remove(inport)
+        if any(i not in range(NUM_CHANNELS - 1) for i in channels):
             msg = "Num channel out of range"
             raise AllegroExceptionError(msg)
         d = {}
-        if len(channels) == 0:
-            channels = NUM_CHANNELS
-        if inport in channels:
-            channels.remove(inport)
+
         for i in channels:
             d[i] = uniform(-50, 0)
         return d
