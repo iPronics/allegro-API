@@ -56,6 +56,7 @@ class Smartlight:
     """Class for SmartLight object."""
 
     def __init__(self):
+        """Method for initiating Smartlight tests."""
         self.connected = False
         random.seed(SEED)
 
@@ -223,7 +224,7 @@ class Smartlight:
             raise AllegroConnectionError(CONN_MSG)
 
         self.__validate_port(inport)
-        if channels == None:
+        if channels is None:
             channels = list(range(NUM_CHANNELS - 1))
         if inport in channels:
             channels.remove(inport)
