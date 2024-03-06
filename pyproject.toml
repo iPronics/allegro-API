@@ -1,8 +1,8 @@
 [project]
-name = "allegroAPI"
+name = "Smartlight"
 dynamic = ["version"]
 
-description = "Smartlight web API"
+description = "Smartlight API"
 requires-python = ">=3.11"
 authors = [{ name = "iPronics", email = "support@ipronics.com" }]
 dependencies = []
@@ -20,7 +20,7 @@ requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
 where = ["src/"]
 
 [tool.setuptools.package-data]
-allegroAPI = []
+Smartlight = []
 
 [tool.coverage.report]
 skip_empty = true
@@ -29,6 +29,8 @@ show_missing = true
 exclude_also = ["if __name__ == .__main__.:"]
 [tool.pytest.ini_options]
 addopts = '--doctest-modules'
+doctest_optionflags = ["IGNORE_EXCEPTION_DETAIL", "NUMBER"]
+
 
 [tool.ruff]
 
@@ -80,7 +82,6 @@ select = [
     "INT", # flake8-gettext
     "ARG", # flake8-unused-arguments
     "PTH", # flake8-use-pathlib
-    "TD",  # flake8-todos
     #"FIX",  # flake8-fixme
     "ERA", # eradicate
     #"PD",  # pandas-vet
@@ -103,6 +104,7 @@ ignore-init-module-imports = true
 ignore = [
     "ANN101", # missing annotation for self
     "ANN204", # missing return type in init
+    "S311",   # uses of cryptographically weak pseudo-random 
 ]
 
 [tool.ruff.lint.per-file-ignores]

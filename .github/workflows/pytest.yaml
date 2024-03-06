@@ -1,0 +1,22 @@
+name: test
+on: [pull_request]
+
+jobs:
+  # Run tests with [stable] dependencies
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install module dependencies
+        run: python -m pip install ./[dev]
+      - name: Run Ruff
+        run: ruff check --output-format=github .
+      - name: ruff format
+        run: ruff format --check --diff .
+      - name: Run pytest
+        run: python -m pytest -s -vv --cov --durations=0
+      - name: Check coverage
+        run: coverage report -m --skip-covered --fail-under=80
