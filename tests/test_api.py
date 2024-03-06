@@ -162,10 +162,9 @@ def test_happy_interrogate_fiber_1():
     sm.connect()
     a = sm.interrogate_fiber(1, [1, 10])
     assert isinstance(a, dict)
-    k = list(a.keys())
-    v = list(a.values())
-    assert (isinstance(i, int) for i in k)
-    assert (isinstance(i, float) for i in v)
+    for k, v in a.items():
+        assert isinstance(k, int)
+        assert isinstance(v, float)
 
 
 def test_happy_interrogate_fiber_2():
@@ -173,6 +172,6 @@ def test_happy_interrogate_fiber_2():
     a = sm.interrogate_fiber(1)
     assert isinstance(a, dict)
     k = list(a.keys())
-    v = list(a.values())
-    assert (isinstance(i, int) for i in k)
-    assert (isinstance(i, float) for i in v)
+    for k, v in a.items():
+        assert isinstance(k, int)
+        assert isinstance(v, float)

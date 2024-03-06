@@ -191,7 +191,8 @@ class Smartlight:
         self.__validate_port(inport)
         self.__validate_port(outport)
 
-        # AllegroExceptionError when given combination of bandwidth and gd_slope specification were not reachable by the lattice filter HPB  # noqa: E501
+        # AllegroExceptionError when given combination of bandwidth and gd_slope
+        # specification were not reachable by the lattice filter HPB
 
     def interrogate_fiber(
         self,
