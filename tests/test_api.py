@@ -31,7 +31,7 @@ def test_disconnect(smartlight):
 
 
 @pytest.mark.parametrize(
-    "n,c,p",
+    ("number", "couple", "phase"),
     [
         (100, 0.1, 2),
         (2, 5, 1),
@@ -40,12 +40,17 @@ def test_disconnect(smartlight):
         (2, 0.2, "one"),
     ],
 )
-def test_set_puc_states(smartlight, n, c, p):
+def test_set_puc_states(
+    smartlight,
+    number,
+    couple,
+    phase,
+):
     with pytest.raises(AllegroConnectionError):
         smartlight.set_puc_states({0: PUCState(k=1, phase=2)})
     smartlight.connect()
     with pytest.raises(AllegroError):
-        smartlight.set_puc_states({n: PUCState(k=c, phase=p)})
+        smartlight.set_puc_states({number: PUCState(k=couple, phase=phase)})
 
 
 def test_happy_set_puc_states(smartlight):
@@ -71,7 +76,7 @@ def test_reset(smartlight):
 
 
 @pytest.mark.parametrize(
-    "i,o",
+    ("inputport", "outputport"),
     [
         (70, 0),
         (0, 70),
@@ -80,12 +85,12 @@ def test_reset(smartlight):
         (0, 0),
     ],
 )
-def test_interconnect(smartlight, i, o):
+def test_interconnect(smartlight, inputport, outputport):
     with pytest.raises(AllegroConnectionError):
-        smartlight.interconnect(i, o, reset=True)
+        smartlight.interconnect(inputport, outputport, reset=True)
     smartlight.connect()
     with pytest.raises(AllegroError):
-        smartlight.interconnect(i, o, reset=True)
+        smartlight.interconnect(inputport, outputport, reset=True)
 
 
 def test_happy_interconnect(smartlight):
@@ -97,7 +102,7 @@ def test_happy_interconnect(smartlight):
 
 
 @pytest.mark.parametrize(
-    "i,o",
+    ("inputport", "outputport"),
     [
         (70, [0, 1]),
         (0, [1, 70]),
@@ -105,12 +110,12 @@ def test_happy_interconnect(smartlight):
         (0, [0, 1]),
     ],
 )
-def test_beamsplitter(smartlight, i, o):
+def test_beamsplitter(smartlight, inputport, outputport):
     with pytest.raises(AllegroConnectionError):
-        smartlight.beamsplitter(i, o, reset=True)
+        smartlight.beamsplitter(inputport, outputport, reset=True)
     smartlight.connect()
     with pytest.raises(AllegroError):
-        smartlight.beamsplitter(i, o, reset=True)
+        smartlight.beamsplitter(inputport, outputport, reset=True)
 
 
 def test_happy_beamsplitter(smartlight):
@@ -120,7 +125,7 @@ def test_happy_beamsplitter(smartlight):
 
 
 @pytest.mark.parametrize(
-    "i,o",
+    ("inputport", "outputport"),
     [
         ([0, 1], 70),
         ([1, 70], 0),
@@ -128,12 +133,12 @@ def test_happy_beamsplitter(smartlight):
         ([0, 1], 0),
     ],
 )
-def test_combiner(smartlight, i, o):
+def test_combiner(smartlight, inputport, outputport):
     with pytest.raises(AllegroConnectionError):
-        smartlight.combiner(i, o, reset=True)
+        smartlight.combiner(inputport, outputport, reset=True)
     smartlight.connect()
     with pytest.raises(AllegroError):
-        smartlight.combiner(i, o, reset=True)
+        smartlight.combiner(inputport, outputport, reset=True)
 
 
 def test_happy_combiner(smartlight):
@@ -143,7 +148,7 @@ def test_happy_combiner(smartlight):
 
 
 @pytest.mark.parametrize(
-    "i,o,r",
+    ("inputport", "outputport", "reset"),
     [
         ([0, 1], [3, 70], False),
         ([70, 0], [3, 5], True),
@@ -151,12 +156,12 @@ def test_happy_combiner(smartlight):
         ([1, 0], [2, 0], True),
     ],
 )
-def test_switch(smartlight, i, o, r):
+def test_switch(smartlight, inputport, outputport, reset):
     with pytest.raises(AllegroConnectionError):
-        smartlight.switch(i, o, reset=r)
+        smartlight.switch(inputport, outputport, reset=reset)
     smartlight.connect()
     with pytest.raises(AllegroError):
-        smartlight.switch(i, o, reset=r)
+        smartlight.switch(inputport, outputport, reset=reset)
 
 
 def test_happy_switch(smartlight):
@@ -170,18 +175,18 @@ def test_happy_switch(smartlight):
 
 
 @pytest.mark.parametrize(
-    "i,o",
+    ("inputportport", "outputport"),
     [
         (70, [10, 11]),
         (1, [45, 2]),
     ],
 )
-def test_interrogate_fiber(smartlight, i, o):
+def test_interrogate_fiber(smartlight, inputportport, outputport):
     with pytest.raises(AllegroConnectionError):
-        smartlight.interrogate_fiber(i, o)
+        smartlight.interrogate_fiber(inputportport, outputport)
     smartlight.connect()
     with pytest.raises(AllegroError):
-        smartlight.interrogate_fiber(i, o)
+        smartlight.interrogate_fiber(inputportport, outputport)
 
 
 def test_happy_interrogate_fiber_1(smartlight):
