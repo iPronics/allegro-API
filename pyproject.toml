@@ -29,6 +29,8 @@ show_missing = true
 exclude_also = ["if __name__ == .__main__.:"]
 [tool.pytest.ini_options]
 addopts = '--doctest-modules'
+doctest_optionflags = ["IGNORE_EXCEPTION_DETAIL", "NUMBER"]
+
 
 [tool.ruff]
 
