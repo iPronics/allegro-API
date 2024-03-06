@@ -196,7 +196,7 @@ class Smartlight:
         return self.__give_pucs()
 
     # TODO(Lluis): central_wavelength,bandwidth and gd_slope values to be defined
-    def compensate_dispersion(  # noqa: PLR0913  # pragma: no cover #test not implemented
+    def compensate_dispersion(  # noqa: PLR0913  # pragma: no cover #test not implemented due to method undefinition
         self,
         inport: int,
         outport: int,
@@ -236,3 +236,10 @@ class Smartlight:
         for i in channels:
             d[i] = random.uniform(-50, 0)
         return d
+
+    def get_temp(self) -> float:
+        """Return the temperature in the device."""
+        if not self.connected:
+            raise AllegroConnectionError(CONN_MSG)
+
+        return round(random.uniform(35, 50), 2)

@@ -205,3 +205,11 @@ def test_happy_interrogate_fiber_2(smartlight):
     for k, v in a.items():
         assert isinstance(k, int)
         assert isinstance(v, float)
+
+
+def test_get_temp(smartlight):
+    with pytest.raises(AllegroConnectionError):
+        smartlight.get_temp()
+    smartlight.connect()
+    t = smartlight.get_temp()
+    assert 35 <= t <= 50
