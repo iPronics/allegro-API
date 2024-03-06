@@ -176,7 +176,7 @@ class Smartlight:
         return self.__give_pucs()
 
     # TODO(Lluis): central_wavelength,bandwidth and gd_slope values to be defined
-    def compensate_dispersion(  # noqa: PLR0913  # pragma: no cover
+    def compensate_dispersion(  # noqa: PLR0913  # pragma: no cover #test not implemented
         self,
         inport: int,
         outport: int,
