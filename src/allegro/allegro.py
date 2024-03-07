@@ -51,11 +51,11 @@ class PUCState:
         self.phase %= 2 * pi
 
 
-NUM_CHANNELS = 35
-NUM_PUCS = 71
-NUM_PORTS = 60
-CONN_MSG = "Hardware subsystem are not connected."
-SEED = 12345
+_NUM_CHANNELS = 35
+_NUM_PUCS = 71
+_NUM_PORTS = 60
+_CONN_MSG = "Hardware subsystem are not connected."
+_SEED = 123
 
 
 class Allegro:
@@ -64,12 +64,12 @@ class Allegro:
     def __init__(self):
         """Method for initiating Smartlight tests."""
         self.connected = False
-        random.seed(SEED)
+        random.seed(_SEED)
 
     def __give_pucs(self) -> dict[int, PUCState]:
         """Method to return random PUCStates."""
         d = {}
-        for i in range(NUM_PUCS):
+        for i in range(_NUM_PUCS):
             d[i] = PUCState(
                 k=round(random.random(), 3), phase=round(random.uniform(0, 2 * pi), 3)
             )
@@ -79,7 +79,7 @@ class Allegro:
         if not isinstance(port, int):
             msg = "Wrong port format."
             raise AllegroError(msg)
-        if port not in range(NUM_PORTS):
+        if port not in range(_NUM_PORTS):
             msg = "Port out of range."
             raise AllegroError(msg)
 
@@ -94,24 +94,24 @@ class Allegro:
     def set_puc_states(self, puc_states: dict[int, PUCState]) -> None:
         """Sets the given PUC states."""
         if not self.connected:
-            raise AllegroConnectionError(CONN_MSG)
+            raise AllegroConnectionError(_CONN_MSG)
         if any(not isinstance(i, int) for i in puc_states):
             msg = "PUC format not valid"
             raise AllegroError(msg)
-        if any(i > NUM_PUCS - 1 for i in puc_states):
+        if any(i > _NUM_PUCS - 1 for i in puc_states):
             msg = "PUC out of range"
             raise AllegroError(msg)
 
     def get_puc_states(self) -> dict[int, PUCState]:
         """Returns the current PUC states of the mesh."""
         if not self.connected:
-            raise AllegroConnectionError(CONN_MSG)
+            raise AllegroConnectionError(_CONN_MSG)
         return self.__give_pucs()
 
     def reset(self) -> None:
         """Reset to inactive the active PUCs of the mesh."""
         if not self.connected:
-            raise AllegroConnectionError(CONN_MSG)
+            raise AllegroConnectionError(_CONN_MSG)
 
     def interconnect(
         self,
@@ -122,7 +122,7 @@ class Allegro:
     ) -> dict[int, PUCState]:
         """Create a circuit connection between the specified input and output port of the mesh."""
         if not self.connected:
-            raise AllegroConnectionError(CONN_MSG)
+            raise AllegroConnectionError(_CONN_MSG)
 
         self.__validate_port(inport)
         self.__validate_port(outport)
@@ -131,7 +131,7 @@ class Allegro:
             raise AllegroError(msg)
         return {
             k: PUCState(k=random.choice((0.0, 1.0)))
-            for k in random.sample(range(NUM_PUCS), random.randint(5, 15))
+            for k in random.sample(range(_NUM_PUCS), random.randint(5, 15))
         }
 
     def beamsplitter(
@@ -146,7 +146,7 @@ class Allegro:
         Optical power is divided equally in the outports.
         """
         if not self.connected:
-            raise AllegroConnectionError(CONN_MSG)
+            raise AllegroConnectionError(_CONN_MSG)
 
         self.__validate_port(inport)
         [self.__validate_port(i) for i in outports]
@@ -157,7 +157,7 @@ class Allegro:
 
         return {
             k: PUCState(k=random.choice((0.0, 1.0)))
-            for k in random.sample(range(NUM_PUCS), random.randint(5, 15))
+            for k in random.sample(range(_NUM_PUCS), random.randint(5, 15))
         }
 
     def combiner(
@@ -172,7 +172,7 @@ class Allegro:
         Optical power is combined with equal ratio of the input port signals.
         """
         if not self.connected:
-            raise AllegroConnectionError(CONN_MSG)
+            raise AllegroConnectionError(_CONN_MSG)
 
         self.__validate_port(outport)
         [self.__validate_port(i) for i in inports]
@@ -182,7 +182,7 @@ class Allegro:
             raise AllegroError(msg)
         return {
             k: PUCState(k=random.choice((0.0, 1.0)))
-            for k in random.sample(range(NUM_PUCS), random.randint(5, 15))
+            for k in random.sample(range(_NUM_PUCS), random.randint(5, 15))
         }
 
     def switch(
@@ -194,7 +194,7 @@ class Allegro:
     ) -> dict[int, PUCState]:
         """Create a switch between the given mesh inputs and outports."""
         if not self.connected:
-            raise AllegroConnectionError(CONN_MSG)
+            raise AllegroConnectionError(_CONN_MSG)
 
         [self.__validate_port(i) for i in inports]
         [self.__validate_port(i) for i in outports]
@@ -204,7 +204,7 @@ class Allegro:
             raise AllegroError(msg)
         return {
             k: PUCState(k=random.choice((0.0, 1.0)))
-            for k in random.sample(range(NUM_PUCS), random.randint(5, 15))
+            for k in random.sample(range(_NUM_PUCS), random.randint(5, 15))
         }
 
     # TODO(Lluis): central_wavelength,bandwidth and gd_slope values to be defined
@@ -218,7 +218,7 @@ class Allegro:
     ) -> None:
         """Configures the lattice filter HPB to compensate the given dispersion slope for the specified central wavelength and bandwidth."""  # noqa: E501
         if not self.connected:
-            raise AllegroConnectionError(CONN_MSG)
+            raise AllegroConnectionError(_CONN_MSG)
 
         self.__validate_port(inport)
         self.__validate_port(outport)
@@ -233,14 +233,14 @@ class Allegro:
     ) -> dict[int, float]:
         """Interrogates the specified mesh inport signal using the AWG HPB."""
         if not self.connected:
-            raise AllegroConnectionError(CONN_MSG)
+            raise AllegroConnectionError(_CONN_MSG)
 
         self.__validate_port(inport)
         if channels is None:
-            channels = list(range(NUM_CHANNELS - 1))
+            channels = list(range(_NUM_CHANNELS - 1))
         if inport in channels:
             channels.remove(inport)
-        if any(i not in range(NUM_CHANNELS - 1) for i in channels):
+        if any(i not in range(_NUM_CHANNELS - 1) for i in channels):
             msg = "Num channel out of range"
             raise AllegroError(msg)
         d = {}
@@ -252,14 +252,14 @@ class Allegro:
     def get_temp(self) -> float:
         """Return the temperature in the device."""
         if not self.connected:
-            raise AllegroConnectionError(CONN_MSG)
+            raise AllegroConnectionError(_CONN_MSG)
 
         return round(random.uniform(35, 50), 2)
 
     def get_output_power(self, output_ports: list[int]) -> dict[int, float]:
         """Return the power measured in the given ports."""
         if not self.connected:
-            raise AllegroConnectionError(CONN_MSG)
+            raise AllegroConnectionError(_CONN_MSG)
         d = {}
         for i in output_ports:
             d[i] = i
@@ -268,7 +268,7 @@ class Allegro:
     def get_input_power(self, input_ports: list[int]) -> dict[int, float]:
         """Return the power measured in the given ports."""
         if not self.connected:
-            raise AllegroConnectionError(CONN_MSG)
+            raise AllegroConnectionError(_CONN_MSG)
         d = {}
         for i in input_ports:
             d[i] = i * 0.1
@@ -286,7 +286,8 @@ if __name__ == "__main__":
 
     # Reset mesh state and set all PUCs to bar state.
     a.reset()
-    a.set_puc_states({i: PUCState(k=0.0) for i in range(NUM_PUCS)})
+    all_puc_ids = a.get_puc_states().keys()
+    a.set_puc_states({i: PUCState(k=0.0) for i in all_puc_ids})
 
     # Split the signal from port 2 into ports 17 and 19. Mesh is automatically reset.
     # Print the output power from ports 17 and 19
