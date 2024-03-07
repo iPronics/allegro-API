@@ -262,7 +262,7 @@ class Allegro:
             raise AllegroConnectionError(_CONN_MSG)
         d = {}
         for i in output_ports:
-            d[i] = i
+            d[i] = float(i)
         return d
 
     def get_input_power(self, input_ports: list[int]) -> dict[int, float]:
