@@ -244,7 +244,7 @@ class Allegro:
 
         return round(random.uniform(35, 50), 2)
 
-    def get_output_power(self, output_ports: list[int]) -> dict[int, int]:
+    def get_output_power(self, output_ports: list[int]) -> dict[int, float]:
         """Return the power measured in the given ports."""
         if not self.connected:
             raise AllegroConnectionError(CONN_MSG)
@@ -253,7 +253,7 @@ class Allegro:
             d[i] = i
         return d
 
-    def get_input_power(self, input_ports: list[int]) -> dict[int, int]:
+    def get_input_power(self, input_ports: list[int]) -> dict[int, float]:
         """Return the power measured in the given ports."""
         if not self.connected:
             raise AllegroConnectionError(CONN_MSG)
