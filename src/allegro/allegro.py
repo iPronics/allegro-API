@@ -52,7 +52,7 @@ CONN_MSG = "Hardware subsystem are not connected."
 SEED = 12345
 
 
-class Smartlight:
+class Allegro:
     """Class for SmartLight object."""
 
     def __init__(self):

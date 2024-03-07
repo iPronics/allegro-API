@@ -1,18 +1,18 @@
 import pytest
-from smartlight import (
+from allegro import (
     AllegroConnectionError,
     AllegroError,
     PUCState,
-    Smartlight,
+    Allegro,
 )
 
 
 @pytest.fixture()
-def smartlight():
-    """Fixture that provides a Smartlight instance."""
-    smartlight = Smartlight()
-    yield smartlight
-    smartlight.disconnect()
+def allegro():
+    """Fixture that provides a Allegro instance."""
+    allegro = Allegro()
+    yield allegro
+    allegro.disconnect()
 
 
 def assert_valid_pucstate_dict(d):
@@ -22,12 +22,12 @@ def assert_valid_pucstate_dict(d):
         assert isinstance(v, PUCState)
 
 
-def test_connect(smartlight):
-    assert smartlight.connect() is None
+def test_connect(allegro):
+    assert allegro.connect() is None
 
 
-def test_disconnect(smartlight):
-    assert smartlight.disconnect() is None
+def test_disconnect(allegro):
+    assert allegro.disconnect() is None
 
 
 @pytest.mark.parametrize(
@@ -41,38 +41,38 @@ def test_disconnect(smartlight):
     ],
 )
 def test_set_puc_states(
-    smartlight,
+    allegro,
     number,
     couple,
     phase,
 ):
     with pytest.raises(AllegroConnectionError):
-        smartlight.set_puc_states({0: PUCState(k=1, phase=2)})
-    smartlight.connect()
+        allegro.set_puc_states({0: PUCState(k=1, phase=2)})
+    allegro.connect()
     with pytest.raises(AllegroError):
-        smartlight.set_puc_states({number: PUCState(k=couple, phase=phase)})
+        allegro.set_puc_states({number: PUCState(k=couple, phase=phase)})
 
 
-def test_happy_set_puc_states(smartlight):
+def test_happy_set_puc_states(allegro):
     with pytest.raises(AllegroConnectionError):
-        smartlight.set_puc_states({2: PUCState(k=0.5, phase=1.0)})
-    smartlight.connect()
-    assert (smartlight.set_puc_states({2: PUCState(k=0.5, phase=1.0)})) is None
+        allegro.set_puc_states({2: PUCState(k=0.5, phase=1.0)})
+    allegro.connect()
+    assert (allegro.set_puc_states({2: PUCState(k=0.5, phase=1.0)})) is None
 
 
-def test_get_puc_states(smartlight):
+def test_get_puc_states(allegro):
     with pytest.raises(AllegroConnectionError):
-        smartlight.get_puc_states()
-    smartlight.connect()
-    a = smartlight.get_puc_states()
+        allegro.get_puc_states()
+    allegro.connect()
+    a = allegro.get_puc_states()
     assert_valid_pucstate_dict(a)
 
 
-def test_reset(smartlight):
+def test_reset(allegro):
     with pytest.raises(AllegroConnectionError):
-        smartlight.reset()
-    smartlight.connect()
-    assert smartlight.reset() is None
+        allegro.reset()
+    allegro.connect()
+    assert allegro.reset() is None
 
 
 @pytest.mark.parametrize(
@@ -85,19 +85,19 @@ def test_reset(smartlight):
         (0, 0),
     ],
 )
-def test_interconnect(smartlight, inputport, outputport):
+def test_interconnect(allegro, inputport, outputport):
     with pytest.raises(AllegroConnectionError):
-        smartlight.interconnect(inputport, outputport, reset=True)
-    smartlight.connect()
+        allegro.interconnect(inputport, outputport, reset=True)
+    allegro.connect()
     with pytest.raises(AllegroError):
-        smartlight.interconnect(inputport, outputport, reset=True)
+        allegro.interconnect(inputport, outputport, reset=True)
 
 
-def test_happy_interconnect(smartlight):
+def test_happy_interconnect(allegro):
     with pytest.raises(AllegroConnectionError):
-        smartlight.interconnect(1, 10, reset=True)
-    smartlight.connect()
-    a = smartlight.interconnect(1, 10, reset=True)
+        allegro.interconnect(1, 10, reset=True)
+    allegro.connect()
+    a = allegro.interconnect(1, 10, reset=True)
     assert_valid_pucstate_dict(a)
 
 
@@ -110,17 +110,17 @@ def test_happy_interconnect(smartlight):
         (0, [0, 1]),
     ],
 )
-def test_beamsplitter(smartlight, inputport, outputport):
+def test_beamsplitter(allegro, inputport, outputport):
     with pytest.raises(AllegroConnectionError):
-        smartlight.beamsplitter(inputport, outputport, reset=True)
-    smartlight.connect()
+        allegro.beamsplitter(inputport, outputport, reset=True)
+    allegro.connect()
     with pytest.raises(AllegroError):
-        smartlight.beamsplitter(inputport, outputport, reset=True)
+        allegro.beamsplitter(inputport, outputport, reset=True)
 
 
-def test_happy_beamsplitter(smartlight):
-    smartlight.connect()
-    a = smartlight.beamsplitter(0, [10, 18], reset=True)
+def test_happy_beamsplitter(allegro):
+    allegro.connect()
+    a = allegro.beamsplitter(0, [10, 18], reset=True)
     assert_valid_pucstate_dict(a)
 
 
@@ -133,17 +133,17 @@ def test_happy_beamsplitter(smartlight):
         ([0, 1], 0),
     ],
 )
-def test_combiner(smartlight, inputport, outputport):
+def test_combiner(allegro, inputport, outputport):
     with pytest.raises(AllegroConnectionError):
-        smartlight.combiner(inputport, outputport, reset=True)
-    smartlight.connect()
+        allegro.combiner(inputport, outputport, reset=True)
+    allegro.connect()
     with pytest.raises(AllegroError):
-        smartlight.combiner(inputport, outputport, reset=True)
+        allegro.combiner(inputport, outputport, reset=True)
 
 
-def test_happy_combiner(smartlight):
-    smartlight.connect()
-    a = smartlight.combiner([10, 18], 0, reset=True)
+def test_happy_combiner(allegro):
+    allegro.connect()
+    a = allegro.combiner([10, 18], 0, reset=True)
     assert_valid_pucstate_dict(a)
 
 
@@ -156,17 +156,17 @@ def test_happy_combiner(smartlight):
         ([1, 0], [2, 0], True),
     ],
 )
-def test_switch(smartlight, inputport, outputport, reset):
+def test_switch(allegro, inputport, outputport, reset):
     with pytest.raises(AllegroConnectionError):
-        smartlight.switch(inputport, outputport, reset=reset)
-    smartlight.connect()
+        allegro.switch(inputport, outputport, reset=reset)
+    allegro.connect()
     with pytest.raises(AllegroError):
-        smartlight.switch(inputport, outputport, reset=reset)
+        allegro.switch(inputport, outputport, reset=reset)
 
 
-def test_happy_switch(smartlight):
-    smartlight.connect()
-    a = smartlight.switch([1, 2], [10, 12], reset=True)
+def test_happy_switch(allegro):
+    allegro.connect()
+    a = allegro.switch([1, 2], [10, 12], reset=True)
     assert_valid_pucstate_dict(a)
 
 
@@ -181,53 +181,53 @@ def test_happy_switch(smartlight):
         (1, [45, 2]),
     ],
 )
-def test_interrogate_fiber(smartlight, inputportport, outputport):
+def test_interrogate_fiber(allegro, inputportport, outputport):
     with pytest.raises(AllegroConnectionError):
-        smartlight.interrogate_fiber(inputportport, outputport)
-    smartlight.connect()
+        allegro.interrogate_fiber(inputportport, outputport)
+    allegro.connect()
     with pytest.raises(AllegroError):
-        smartlight.interrogate_fiber(inputportport, outputport)
+        allegro.interrogate_fiber(inputportport, outputport)
 
 
-def test_happy_interrogate_fiber_1(smartlight):
-    smartlight.connect()
-    a = smartlight.interrogate_fiber(1, [1, 10])
+def test_happy_interrogate_fiber_1(allegro):
+    allegro.connect()
+    a = allegro.interrogate_fiber(1, [1, 10])
     assert isinstance(a, dict)
     for k, v in a.items():
         assert isinstance(k, int)
         assert isinstance(v, float)
 
 
-def test_happy_interrogate_fiber_2(smartlight):
-    smartlight.connect()
-    a = smartlight.interrogate_fiber(1)
+def test_happy_interrogate_fiber_2(allegro):
+    allegro.connect()
+    a = allegro.interrogate_fiber(1)
     assert isinstance(a, dict)
     for k, v in a.items():
         assert isinstance(k, int)
         assert isinstance(v, float)
 
 
-def test_get_temp(smartlight):
+def test_get_temp(allegro):
     with pytest.raises(AllegroConnectionError):
-        smartlight.get_temp()
-    smartlight.connect()
-    t = smartlight.get_temp()
+        allegro.get_temp()
+    allegro.connect()
+    t = allegro.get_temp()
     assert 35 <= t <= 50
 
 
-def test_output_power(smartlight):
+def test_output_power(allegro):
     with pytest.raises(AllegroConnectionError):
-        smartlight.get_output_power([1, 2, 3])
-    smartlight.connect()
-    a = smartlight.get_output_power([1, 2, 3])
+        allegro.get_output_power([1, 2, 3])
+    allegro.connect()
+    a = allegro.get_output_power([1, 2, 3])
     assert isinstance(a, dict)
     assert set(a.keys()) & set(a.values())
 
 
-def test_input_power(smartlight):
+def test_input_power(allegro):
     with pytest.raises(AllegroConnectionError):
-        smartlight.get_input_power([1, 2, 3])
-    smartlight.connect()
-    a = smartlight.get_input_power([1, 2, 3])
+        allegro.get_input_power([1, 2, 3])
+    allegro.connect()
+    a = allegro.get_input_power([1, 2, 3])
     assert isinstance(a, dict)
     assert (b == c * 0.1 for b, c in zip(a.keys(), a.values(), strict=False))

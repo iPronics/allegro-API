@@ -1,8 +1,8 @@
 [project]
-name = "Smartlight"
+name = "Allegro"
 dynamic = ["version"]
 
-description = "Smartlight API"
+description = "Allegro API"
 requires-python = ">=3.11"
 authors = [{ name = "iPronics", email = "support@ipronics.com" }]
 dependencies = []
