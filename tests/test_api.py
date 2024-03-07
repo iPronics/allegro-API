@@ -221,7 +221,8 @@ def test_output_power(allegro):
     allegro.connect()
     a = allegro.get_output_power([1, 2, 3])
     assert isinstance(a, dict)
-    assert set(a.keys()) & set(a.values())
+    for k, v in a.items():
+        assert k == v
 
 
 def test_input_power(allegro):
@@ -230,4 +231,5 @@ def test_input_power(allegro):
     allegro.connect()
     a = allegro.get_input_power([1, 2, 3])
     assert isinstance(a, dict)
-    assert (b == c * 0.1 for b, c in zip(a.keys(), a.values(), strict=False))
+    for k, v in a.items():
+        assert k * 0.1 == v
