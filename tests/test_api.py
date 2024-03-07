@@ -213,3 +213,21 @@ def test_get_temp(smartlight):
     smartlight.connect()
     t = smartlight.get_temp()
     assert 35 <= t <= 50
+
+
+def test_output_power(smartlight):
+    with pytest.raises(AllegroConnectionError):
+        smartlight.get_output_power([1, 2, 3])
+    smartlight.connect()
+    a = smartlight.get_output_power([1, 2, 3])
+    assert isinstance(a, dict)
+    assert set(a.keys()) & set(a.values())
+
+
+def test_input_power(smartlight):
+    with pytest.raises(AllegroConnectionError):
+        smartlight.get_input_power([1, 2, 3])
+    smartlight.connect()
+    a = smartlight.get_input_power([1, 2, 3])
+    assert isinstance(a, dict)
+    assert (b == c * 0.1 for b, c in zip(a.keys(), a.values(), strict=False))

@@ -243,3 +243,21 @@ class Smartlight:
             raise AllegroConnectionError(CONN_MSG)
 
         return round(random.uniform(35, 50), 2)
+
+    def get_output_power(self, output_ports: list[int]) -> dict[int, int]:
+        """Return the power measured in the given ports."""
+        if not self.connected:
+            raise AllegroConnectionError(CONN_MSG)
+        d = {}
+        for i in output_ports:
+            d[i] = i
+        return d
+
+    def get_input_power(self, input_ports: list[int]) -> dict[int, int]:
+        """Return the power measured in the given ports."""
+        if not self.connected:
+            raise AllegroConnectionError(CONN_MSG)
+        d = {}
+        for i in input_ports:
+            d[i] = i * 0.1
+        return d
