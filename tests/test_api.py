@@ -1,9 +1,9 @@
 import pytest
 from allegro import (
+    Allegro,
     AllegroConnectionError,
     AllegroError,
     PUCState,
-    Allegro,
 )
 
 
