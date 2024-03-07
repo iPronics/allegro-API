@@ -110,6 +110,7 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 # Some rules for specific types of files
 "tests/test_*" = ["D", "ANN", "S", 'PLR2004', 'ARG001']
+"src/allegro/allegro.py" = ["T201"]
 
 # INP001 excluded because of https://github.com/astral-sh/ruff/issues/6474
 "tests/*" = ["INP001"]
