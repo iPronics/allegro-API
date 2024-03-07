@@ -5,7 +5,13 @@ from dataclasses import dataclass
 from math import pi
 from typing import Optional
 
-from .exceptions import AllegroConnectionError, AllegroError
+
+class AllegroError(Exception):
+    """General Exception for this app."""
+
+
+class AllegroConnectionError(AllegroError):
+    """Unexpected connection state."""
 
 
 @dataclass
@@ -123,10 +129,10 @@ class Allegro:
         if inport == outport:
             msg = "Input port can't be the same than ouput port"
             raise AllegroError(msg)
-        return self.__give_pucs()
-
-        # AllegroError when interconnection between the given ports is not posible
-        # AllegroError when hardware is not connected
+        return {
+            k: PUCState(k=random.choice((0.0, 1.0)))
+            for k in random.sample(range(NUM_PUCS), random.randint(5, 15))
+        }
 
     def beamsplitter(
         self,
@@ -148,9 +154,11 @@ class Allegro:
         if inport in outports:
             msg = "Input port in ouput port list"
             raise AllegroError(msg)
-        return self.__give_pucs()
-        # AllegroError when beamsplitter between the given ports is not possible
-        # AllegroError when hardware is not connected
+
+        return {
+            k: PUCState(k=random.choice((0.0, 1.0)))
+            for k in random.sample(range(NUM_PUCS), random.randint(5, 15))
+        }
 
     def combiner(
         self,
@@ -172,9 +180,10 @@ class Allegro:
         if outport in inports:
             msg = "Output port in input port list"
             raise AllegroError(msg)
-        return self.__give_pucs()
-        # AllegroError when combiner between the given ports is not possible
-        # AllegroError when hardware is not connected
+        return {
+            k: PUCState(k=random.choice((0.0, 1.0)))
+            for k in random.sample(range(NUM_PUCS), random.randint(5, 15))
+        }
 
     def switch(
         self,
@@ -193,7 +202,10 @@ class Allegro:
         if set(inports) & set(outports):
             msg = "Two state set for the same port"
             raise AllegroError(msg)
-        return self.__give_pucs()
+        return {
+            k: PUCState(k=random.choice((0.0, 1.0)))
+            for k in random.sample(range(NUM_PUCS), random.randint(5, 15))
+        }
 
     # TODO(Lluis): central_wavelength,bandwidth and gd_slope values to be defined
     def compensate_dispersion(  # noqa: PLR0913  # pragma: no cover #test not implemented due to method undefinition
@@ -261,3 +273,38 @@ class Allegro:
         for i in input_ports:
             d[i] = i * 0.1
         return d
+
+
+if __name__ == "__main__":
+    # Instantiate Allegro and connect subsystems.
+    a = Allegro()
+    a.connect()
+    print(f"{a.connected=}")
+
+    # Set PUC 2 to bar state and PUC 5 to cross state. PUC 2 phase is also set to pi.
+    a.set_puc_states({2: PUCState(k=0.0, phase=3.14), 5: PUCState(k=1.0)})
+
+    # Reset mesh state and set all PUCs to bar state.
+    a.reset()
+    a.set_puc_states({i: PUCState(k=0.0) for i in range(NUM_PUCS)})
+
+    # Split the signal from port 2 into ports 17 and 19. Mesh is automatically reset.
+    # Print the output power from ports 17 and 19
+    states = a.beamsplitter(inport=2, outports=[17, 19])
+    print(f"{states=}")
+    print(f"{a.get_output_power([17, 19])=}")
+
+    # Try to set an additional interconnect without resetting the mesh.
+    # Check if it is compatible and rollback to previous state if
+    # it is not.
+    new_states = a.interconnect(inport=25, outport=29, reset=False)
+    print(f"{new_states=}")
+
+    incompatible = bool(set(states).intersection(new_states))
+    if incompatible:
+        print("Resetting")
+        a.reset()
+        a.set_puc_states(states)
+
+    # Disconnect subsystems
+    a.disconnect()
