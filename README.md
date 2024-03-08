@@ -50,3 +50,6 @@ if incompatible:
 # Disconnect subsystems
 a.disconnect()
 ```
+
+Copyright 2024 iPronics All rights reserved
+
